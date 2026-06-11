@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Camada_2" data-name="Camada 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 160.28 160.28">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #231f20;
+      }
+
+      .cls-2 {
+        fill: none;
+      }
+
+      .cls-3 {
+        fill: #ffdd08;
+      }
+
+      .cls-4 {
+        fill: url(#Gradiente_sem_nome_3);
+      }
+
+      .cls-5 {
+        clip-path: url(#clippath);
+      }
+    </style>
+    <clipPath id="clippath">
+      <polygon class="cls-2" points="80.44 58.3 36.19 9.61 36.19 44.97 78.58 92.03 82.19 92.03 124.09 44.97 124.09 9.58 80.44 58.3"/>
+    </clipPath>
+    <linearGradient id="Gradiente_sem_nome_3" data-name="Gradiente sem nome 3" x1="-48.06" y1="756.04" x2="-47.06" y2="756.04" gradientTransform="translate(4260.7268 66505.8962) scale(87.8994 -87.8994)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#595a5c"/>
+      <stop offset=".05" stop-color="#6d6e71"/>
+      <stop offset=".16" stop-color="#919396"/>
+      <stop offset=".52" stop-color="#9e9fa2"/>
+      <stop offset=".88" stop-color="#8c8e90"/>
+      <stop offset=".97" stop-color="#646567"/>
+      <stop offset="1" stop-color="#595a5c"/>
+    </linearGradient>
+  </defs>
+  <g id="Camada_1-2" data-name="Camada 1">
+    <rect class="cls-3" width="160.28" height="160.28"/>
+    <g class="cls-5">
+      <rect class="cls-4" x="36.19" y="9.58" width="87.9" height="82.45"/>
+    </g>
+    <polygon class="cls-1" points="10.89 9.61 10.89 150.67 36.22 150.67 36.22 40.91 36.22 9.61 10.89 9.61"/>
+    <polygon class="cls-1" points="123.96 9.61 123.96 40.91 123.96 150.67 149.4 150.67 149.4 9.61 123.96 9.61"/>
+  </g>
+</svg>

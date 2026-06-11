@@ -1,8 +1,27 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@custom-variant dark (&:is(.dark *));
+
+/* Stitch Design System — static color tokens */
+@theme {
+  --color-surface: #031427;
+  --color-surface-dim: #031427;
+  --color-surface-bright: #2a3a4f;
+  --color-surface-container-lowest: #000f21;
+  --color-surface-container-low: #0b1c30;
+  --color-surface-container: #102034;
+  --color-surface-container-high: #1b2b3f;
+  --color-surface-container-highest: #26364a;
+  --color-on-surface: #d3e4fe;
+  --color-on-surface-variant: #c6c6cd;
+  --color-outline: #909097;
+  --color-outline-variant: #45464d;
+  --color-primary-container: #0f172a;
+  --color-on-primary-color: #283044;
+  --color-tertiary: #dec29a;
+  --color-tertiary-container: #231500;
 }
 
 @theme inline {
@@ -10,17 +29,148 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-sans);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  /* Stitch dark theme — always-dark */
+  --background: #031427;
+  --foreground: #d3e4fe;
+  --card: #102034;
+  --card-foreground: #d3e4fe;
+  --popover: #1b2b3f;
+  --popover-foreground: #d3e4fe;
+  --primary: #bec6e0;
+  --primary-foreground: #283044;
+  --secondary: #26364a;
+  --secondary-foreground: #d3e4fe;
+  --muted: #1b2b3f;
+  --muted-foreground: #c6c6cd;
+  --accent: #26364a;
+  --accent-foreground: #d3e4fe;
+  --destructive: #f87171;
+  --border: #45464d;
+  --input: #031427;
+  --ring: #bec6e0;
+  --radius: 0.5rem;
+  --sidebar: #102034;
+  --sidebar-foreground: #d3e4fe;
+  --sidebar-primary: #bec6e0;
+  --sidebar-primary-foreground: #283044;
+  --sidebar-accent: #26364a;
+  --sidebar-accent-foreground: #d3e4fe;
+  --sidebar-border: #45464d;
+  --sidebar-ring: #bec6e0;
+  --chart-1: #6366f1;
+  --chart-2: #22c55e;
+  --chart-3: #dec29a;
+  --chart-4: #bec6e0;
+  --chart-5: #c6c6cd;
+}
+
+.dark {
+  --background: #031427;
+  --foreground: #d3e4fe;
+  --card: #102034;
+  --card-foreground: #d3e4fe;
+  --popover: #1b2b3f;
+  --popover-foreground: #d3e4fe;
+  --primary: #bec6e0;
+  --primary-foreground: #283044;
+  --secondary: #26364a;
+  --secondary-foreground: #d3e4fe;
+  --muted: #1b2b3f;
+  --muted-foreground: #c6c6cd;
+  --accent: #26364a;
+  --accent-foreground: #d3e4fe;
+  --destructive: #f87171;
+  --border: #45464d;
+  --input: #031427;
+  --ring: #bec6e0;
+  --sidebar: #102034;
+  --sidebar-foreground: #d3e4fe;
+  --sidebar-primary: #bec6e0;
+  --sidebar-primary-foreground: #283044;
+  --sidebar-accent: #26364a;
+  --sidebar-accent-foreground: #d3e4fe;
+  --sidebar-border: #45464d;
+  --sidebar-ring: #bec6e0;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html, body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-geist-sans), 'Geist', system-ui, sans-serif;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer utilities {
+  /* Gradient border — works with border-radius */
+  .glass-card {
+    background:
+      linear-gradient(#102034, #102034) padding-box,
+      linear-gradient(135deg, #334155 0%, #1e293b 100%) border-box;
+    border: 1px solid transparent;
+  }
+  .glass-card-high {
+    background:
+      linear-gradient(#1b2b3f, #1b2b3f) padding-box,
+      linear-gradient(135deg, #334155 0%, #1e293b 100%) border-box;
+    border: 1px solid transparent;
+  }
 }
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #031427; }
+::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #334155; }
+
+/* Material Symbols sizing */
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-size: 20px;
+  line-height: 1;
+  user-select: none;
+}
+.msym-sm { font-size: 16px; }
+.msym-lg { font-size: 24px; }

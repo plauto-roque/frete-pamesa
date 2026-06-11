@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+}
+
+model Cliente {
+  id        Int      @id @default(autoincrement())
+  nome      String   @unique
+  fretes    Frete[]
+  createdAt DateTime @default(now())
+}
+
+model Motorista {
+  id       Int            @id @default(autoincrement())
+  nome     String         @unique
+  telefone String?
+  conta    ContaBancaria?
+  fretes   Frete[]
+}
+
+model ContaBancaria {
+  id          Int       @id @default(autoincrement())
+  motorista   Motorista @relation(fields: [motoristaId], references: [id], onDelete: Cascade)
+  motoristaId Int       @unique
+  nomeConta   String?
+  cpf         String?
+  banco       String?
+  numeroBanco String?
+  tipoConta   String?
+  agencia     String?
+  conta       String?
+}
+
+model Cidade {
+  id        Int     @id @default(autoincrement())
+  nome      String  @unique
+  distancia Float
+  fretes    Frete[]
+}
+
+model Frete {
+  id                  Int       @id @default(autoincrement())
+  data                DateTime
+  cliente             Cliente   @relation(fields: [clienteId], references: [id])
+  clienteId           Int
+  peso                Float
+  motorista           Motorista @relation(fields: [motoristaId], references: [id])
+  motoristaId         Int
+  cidade              Cidade    @relation(fields: [cidadeId], references: [id])
+  cidadeId            Int
+  distancia           Float
+  valorPorTonelada    Float
+  valorTonMotorista   Float
+  valorTonEscritorio  Float
+  valorTotal          Float
+  valorMotorista      Float
+  valorEscritorio     Float
+  tipoPagamento       String?
+  pagoCliente         Boolean   @default(false)
+  pagoMotorista       Boolean   @default(false)
+  observacao          String?
+  createdAt           DateTime  @default(now())
+}
