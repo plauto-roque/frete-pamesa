@@ -378,7 +378,7 @@ export default function ClientesPage() {
             </div>
 
             <div className="border-t pt-3">
-              <p className="text-xs font-semibold text-on-surface-variant uppercase tracking-wider mb-3">Contato da Empresa</p>
+              <p className="text-xs font-semibold text-on-surface-variant uppercase tracking-wider mb-3">Telefones / E-mail</p>
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1.5">
                   <Label>Telefone 1</Label>
@@ -399,16 +399,6 @@ export default function ClientesPage() {
                   />
                 </div>
                 {field("email", "E-mail", "contato@empresa.com.br", "col-span-2")}
-                {field("responsavel", "Responsável", "Nome do responsável", "col-span-2")}
-                <div className="space-y-1.5 col-span-2">
-                  <Label>WhatsApp do responsável</Label>
-                  <Input
-                    value={form.whatsapp ?? ""}
-                    onChange={(e) => set("whatsapp", formatPhone(e.target.value))}
-                    placeholder="(83) 00000-0000"
-                    inputMode="numeric"
-                  />
-                </div>
               </div>
             </div>
 
