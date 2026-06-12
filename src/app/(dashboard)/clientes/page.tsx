@@ -20,6 +20,22 @@ import { Label } from "@/components/ui/label";
 import { Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
+function formatCpfCnpj(value: string): string {
+  const d = value.replace(/\D/g, "").slice(0, 14);
+  const n = d.length;
+  if (n <= 11) {
+    if (n <= 3) return d;
+    if (n <= 6) return `${d.slice(0,3)}.${d.slice(3)}`;
+    if (n <= 9) return `${d.slice(0,3)}.${d.slice(3,6)}.${d.slice(6)}`;
+    return `${d.slice(0,3)}.${d.slice(3,6)}.${d.slice(6,9)}-${d.slice(9)}`;
+  }
+  if (n <= 2) return d;
+  if (n <= 5) return `${d.slice(0,2)}.${d.slice(2)}`;
+  if (n <= 8) return `${d.slice(0,2)}.${d.slice(2,5)}.${d.slice(5)}`;
+  if (n <= 12) return `${d.slice(0,2)}.${d.slice(2,5)}.${d.slice(5,8)}/${d.slice(8)}`;
+  return `${d.slice(0,2)}.${d.slice(2,5)}.${d.slice(5,8)}/${d.slice(8,12)}-${d.slice(12)}`;
+}
+
 const UFS = [
   "PB","RN","PE",
   "AC","AL","AP","AM","BA","CE","DF","ES","GO","MA",
@@ -227,7 +243,15 @@ export default function ClientesPage() {
             <div className="grid grid-cols-2 gap-3">
               {field("nome", "Razão Social", "Razão social", "col-span-2")}
               {field("fantasia", "Fantasia", "Nome fantasia")}
-              {field("cnpj", "CNPJ", "00.000.000/0000-00")}
+              <div className="space-y-1.5">
+                <Label>CNPJ / CPF</Label>
+                <Input
+                  value={form.cnpj ?? ""}
+                  onChange={(e) => set("cnpj", formatCpfCnpj(e.target.value))}
+                  placeholder="00.000.000/0000-00"
+                  inputMode="numeric"
+                />
+              </div>
             </div>
 
             <div className="border-t pt-3">
