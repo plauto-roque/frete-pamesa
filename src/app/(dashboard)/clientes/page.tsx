@@ -20,6 +20,16 @@ import { Label } from "@/components/ui/label";
 import { Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
+function formatPhone(value: string): string {
+  const d = value.replace(/\D/g, "").slice(0, 11);
+  const n = d.length;
+  if (n === 0) return "";
+  if (n <= 2) return `(${d}`;
+  if (n <= 6) return `(${d.slice(0,2)}) ${d.slice(2)}`;
+  if (n <= 10) return `(${d.slice(0,2)}) ${d.slice(2,6)}-${d.slice(6)}`;
+  return `(${d.slice(0,2)}) ${d.slice(2,7)}-${d.slice(7)}`;
+}
+
 function formatCpfCnpj(value: string): string {
   const d = value.replace(/\D/g, "").slice(0, 14);
   const n = d.length;
@@ -242,8 +252,8 @@ export default function ClientesPage() {
 
             <div className="grid grid-cols-2 gap-3">
               {field("nome", "Razão Social", "Razão social", "col-span-2")}
-              {field("fantasia", "Fantasia", "Nome fantasia")}
-              <div className="space-y-1.5">
+              {field("fantasia", "Fantasia", "Nome fantasia", "col-span-2")}
+              <div className="space-y-1.5 col-span-2">
                 <Label>CNPJ / CPF</Label>
                 <Input
                   value={form.cnpj ?? ""}
@@ -284,8 +294,24 @@ export default function ClientesPage() {
             <div className="border-t pt-3">
               <p className="text-xs font-semibold text-on-surface-variant uppercase tracking-wider mb-3">Contato</p>
               <div className="grid grid-cols-2 gap-3">
-                {field("telefone1", "Telefone 1", "(83) 0000-0000")}
-                {field("telefone2", "Telefone 2", "(83) 0000-0000")}
+                <div className="space-y-1.5">
+                  <Label>Telefone 1</Label>
+                  <Input
+                    value={form.telefone1 ?? ""}
+                    onChange={(e) => set("telefone1", formatPhone(e.target.value))}
+                    placeholder="(83) 00000-0000"
+                    inputMode="numeric"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label>Telefone 2</Label>
+                  <Input
+                    value={form.telefone2 ?? ""}
+                    onChange={(e) => set("telefone2", formatPhone(e.target.value))}
+                    placeholder="(83) 00000-0000"
+                    inputMode="numeric"
+                  />
+                </div>
                 {field("email", "E-mail", "contato@empresa.com.br", "col-span-2")}
                 {field("responsavel", "Responsável", "Nome do responsável", "col-span-2")}
               </div>
