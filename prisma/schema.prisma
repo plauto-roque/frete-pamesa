@@ -15,10 +15,22 @@ model User {
 }
 
 model Cliente {
-  id        Int      @id @default(autoincrement())
-  nome      String   @unique
-  fretes    Frete[]
-  createdAt DateTime @default(now())
+  id          Int      @id @default(autoincrement())
+  nome        String   @unique
+  fantasia    String?
+  cnpj        String?
+  logradouro  String?
+  numero      String?
+  bairro      String?
+  cidade      String?
+  uf          String?
+  cep         String?
+  telefone1   String?
+  telefone2   String?
+  email       String?
+  responsavel String?
+  fretes      Frete[]
+  createdAt   DateTime @default(now())
 }
 
 model Motorista {

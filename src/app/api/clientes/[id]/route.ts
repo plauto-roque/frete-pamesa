@@ -12,7 +12,21 @@ export async function PUT(req: NextRequest, { params }: Ctx) {
   const body = await req.json();
   const cliente = await prisma.cliente.update({
     where: { id: Number(id) },
-    data: { nome: body.nome },
+    data: {
+      nome: body.nome,
+      fantasia: body.fantasia ?? null,
+      cnpj: body.cnpj ?? null,
+      logradouro: body.logradouro ?? null,
+      numero: body.numero ?? null,
+      bairro: body.bairro ?? null,
+      cidade: body.cidade ?? null,
+      uf: body.uf ?? null,
+      cep: body.cep ?? null,
+      telefone1: body.telefone1 ?? null,
+      telefone2: body.telefone2 ?? null,
+      email: body.email ?? null,
+      responsavel: body.responsavel ?? null,
+    },
   });
   return NextResponse.json(cliente);
 }
