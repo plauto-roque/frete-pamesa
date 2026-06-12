@@ -49,8 +49,10 @@ export default function FretesPage() {
   const fetchFretes = useCallback(async () => {
     setLoading(true);
     const params = new URLSearchParams({ page: String(page), limit: String(LIMIT) });
-    if (filtroPagoCliente) params.set("pagoCliente", filtroPagoCliente);
-    if (filtroPagoMotorista) params.set("pagoMotorista", filtroPagoMotorista);
+    if (filtroPagoCliente === "pago") params.set("pagoCliente", "true");
+    else if (filtroPagoCliente === "pendente") params.set("pagoCliente", "false");
+    if (filtroPagoMotorista === "pago") params.set("pagoMotorista", "true");
+    else if (filtroPagoMotorista === "pendente") params.set("pagoMotorista", "false");
     if (filtroDataInicio) params.set("dataInicio", filtroDataInicio);
     if (filtroDataFim) params.set("dataFim", filtroDataFim);
 
@@ -127,24 +129,24 @@ export default function FretesPage() {
             onChange={(e) => setFiltroDataFim(e.target.value)}
             className="w-40 bg-surface border-outline-variant text-on-surface"
           />
-          <Select value={filtroPagoCliente} onValueChange={(v) => setFiltroPagoCliente(v ?? "")}>
+          <Select value={filtroPagoCliente || "todos"} onValueChange={(v) => setFiltroPagoCliente(v === "todos" ? "" : v)}>
             <SelectTrigger className="w-44 bg-surface border-outline-variant text-on-surface">
               <SelectValue placeholder="Pgto. cliente" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">Todos</SelectItem>
-              <SelectItem value="true">Pago</SelectItem>
-              <SelectItem value="false">Pendente</SelectItem>
+              <SelectItem value="todos">Todos</SelectItem>
+              <SelectItem value="pago">Pago</SelectItem>
+              <SelectItem value="pendente">Pendente</SelectItem>
             </SelectContent>
           </Select>
-          <Select value={filtroPagoMotorista} onValueChange={(v) => setFiltroPagoMotorista(v ?? "")}>
+          <Select value={filtroPagoMotorista || "todos"} onValueChange={(v) => setFiltroPagoMotorista(v === "todos" ? "" : v)}>
             <SelectTrigger className="w-44 bg-surface border-outline-variant text-on-surface">
               <SelectValue placeholder="Pgto. motorista" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">Todos</SelectItem>
-              <SelectItem value="true">Pago</SelectItem>
-              <SelectItem value="false">Pendente</SelectItem>
+              <SelectItem value="todos">Todos</SelectItem>
+              <SelectItem value="pago">Pago</SelectItem>
+              <SelectItem value="pendente">Pendente</SelectItem>
             </SelectContent>
           </Select>
         </div>
