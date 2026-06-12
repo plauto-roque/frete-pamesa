@@ -68,12 +68,13 @@ interface Cliente {
   telefone2?: string | null;
   email?: string | null;
   responsavel?: string | null;
+  whatsapp?: string | null;
 }
 
 const EMPTY: Omit<Cliente, "id"> = {
   nome: "", fantasia: "", cnpj: "", logradouro: "", numero: "",
   bairro: "", cidade: "", uf: "", cep: "",
-  telefone1: "", telefone2: "", email: "", responsavel: "",
+  telefone1: "", telefone2: "", email: "", responsavel: "", whatsapp: "",
 };
 
 export default function ClientesPage() {
@@ -112,6 +113,7 @@ export default function ClientesPage() {
       telefone2: c.telefone2 ?? "",
       email: c.email ?? "",
       responsavel: c.responsavel ?? "",
+      whatsapp: c.whatsapp ?? "",
     });
     setOpen(true);
   }
@@ -139,6 +141,7 @@ export default function ClientesPage() {
       telefone2: form.telefone2?.trim() || null,
       email: form.email?.trim().toLowerCase() || null,
       responsavel: form.responsavel?.trim().toUpperCase() || null,
+      whatsapp: form.whatsapp ? formatPhone(form.whatsapp) : null,
     };
     const res = await fetch(url, {
       method,
@@ -314,6 +317,15 @@ export default function ClientesPage() {
                 </div>
                 {field("email", "E-mail", "contato@empresa.com.br", "col-span-2")}
                 {field("responsavel", "Responsável", "Nome do responsável", "col-span-2")}
+                <div className="space-y-1.5 col-span-2">
+                  <Label>WhatsApp do responsável</Label>
+                  <Input
+                    value={form.whatsapp ?? ""}
+                    onChange={(e) => set("whatsapp", formatPhone(e.target.value))}
+                    placeholder="(83) 00000-0000"
+                    inputMode="numeric"
+                  />
+                </div>
               </div>
             </div>
 

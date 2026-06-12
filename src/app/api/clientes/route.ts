@@ -30,6 +30,7 @@ export async function POST(req: NextRequest) {
       telefone2: body.telefone2 ?? null,
       email: body.email ?? null,
       responsavel: body.responsavel ?? null,
+      whatsapp: body.whatsapp ?? null,
     },
   });
   return NextResponse.json(cliente, { status: 201 });

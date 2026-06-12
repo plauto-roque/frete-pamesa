@@ -29,6 +29,7 @@ model Cliente {
   telefone2   String?
   email       String?
   responsavel String?
+  whatsapp    String?
   fretes      Frete[]
   createdAt   DateTime @default(now())
 }
