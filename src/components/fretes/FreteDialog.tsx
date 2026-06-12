@@ -57,10 +57,77 @@ interface FreteDialogProps {
   onSaved: () => void;
 }
 
+function SearchableSelect<T extends { id: number; nome: string }>({
+  items,
+  value,
+  onChange,
+  placeholder,
+  renderLabel,
+}: {
+  items: T[];
+  value: string;
+  onChange: (id: string) => void;
+  placeholder: string;
+  renderLabel?: (item: T) => string;
+}) {
+  const [query, setQuery] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+  const label = renderLabel ?? ((item: T) => item.nome);
+  const selected = items.find((i) => String(i.id) === value);
+  const selectedLabel = selected ? label(selected) : "";
+
+  const filtered = items.filter((i) =>
+    i.nome.toLowerCase().includes(query.toLowerCase())
+  );
+
+  return (
+    <div className="relative">
+      <Input
+        value={isOpen ? query : selectedLabel}
+        onChange={(e) => {
+          setQuery(e.target.value);
+          setIsOpen(true);
+        }}
+        onFocus={() => {
+          setQuery("");
+          setIsOpen(true);
+        }}
+        onBlur={() => setTimeout(() => setIsOpen(false), 150)}
+        placeholder={placeholder}
+        autoComplete="off"
+      />
+      {isOpen && (
+        <div className="absolute z-50 w-full mt-1 max-h-52 overflow-y-auto rounded-md border border-outline-variant bg-[#102034] shadow-xl">
+          {filtered.length === 0 ? (
+            <p className="px-3 py-2 text-sm text-on-surface-variant">Nenhum resultado</p>
+          ) : (
+            filtered.slice(0, 80).map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                className="w-full text-left px-3 py-2 text-sm text-on-surface hover:bg-surface-container-highest transition-colors"
+                onClick={() => {
+                  onChange(String(item.id));
+                  setIsOpen(false);
+                  setQuery("");
+                }}
+              >
+                {label(item)}
+              </button>
+            ))
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+type CidadeItem = { id: number; nome: string; distancia: number };
+
 export function FreteDialog({ open, onOpenChange, frete, onSaved }: FreteDialogProps) {
   const [clientes, setClientes] = useState<{ id: number; nome: string }[]>([]);
   const [motoristas, setMotoristas] = useState<{ id: number; nome: string }[]>([]);
-  const [cidades, setCidades] = useState<{ id: number; nome: string; distancia: number }[]>([]);
+  const [cidades, setCidades] = useState<CidadeItem[]>([]);
   const [preview, setPreview] = useState({ total: 0, mot: 0, esc: 0 });
 
   const { register, handleSubmit, watch, setValue, reset, formState: { isSubmitting } } = useForm<FormValues>({
@@ -96,6 +163,12 @@ export function FreteDialog({ open, onOpenChange, frete, onSaved }: FreteDialogP
     const esc = tons * (parseFloat(valTonEsc) || 0);
     setPreview({ total, mot, esc });
   }, [peso, valTon, valTonMot, valTonEsc]);
+
+  useEffect(() => {
+    const total = parseFloat(valTon) || 0;
+    const mot = parseFloat(valTonMot) || 0;
+    setValue("valorTonEscritorio", (total - mot).toFixed(2));
+  }, [valTon, valTonMot, setValue]);
 
   useEffect(() => {
     if (!open) return;
@@ -148,8 +221,7 @@ export function FreteDialog({ open, onOpenChange, frete, onSaved }: FreteDialogP
     }
   }, [frete, reset]);
 
-  function handleCidadeChange(cidadeId: string | null) {
-    if (!cidadeId) return;
+  function handleCidadeChange(cidadeId: string) {
     setValue("cidadeId", cidadeId);
     const cidade = cidades.find((c) => String(c.id) === cidadeId);
     if (cidade) setValue("distancia", String(cidade.distancia));
@@ -215,52 +287,33 @@ export function FreteDialog({ open, onOpenChange, frete, onSaved }: FreteDialogP
 
             <div className="space-y-1.5">
               <Label>Cliente</Label>
-              <Select
-                onValueChange={(v) => setValue("clienteId", v ?? "")}
+              <SearchableSelect
+                items={clientes}
                 value={watch("clienteId")}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecionar cliente" />
-                </SelectTrigger>
-                <SelectContent>
-                  {clientes.map((c) => (
-                    <SelectItem key={c.id} value={String(c.id)}>{c.nome}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                onChange={(v) => setValue("clienteId", v)}
+                placeholder="Buscar cliente..."
+              />
             </div>
 
             <div className="space-y-1.5">
               <Label>Motorista</Label>
-              <Select
-                onValueChange={(v) => setValue("motoristaId", v ?? "")}
+              <SearchableSelect
+                items={motoristas}
                 value={watch("motoristaId")}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecionar motorista" />
-                </SelectTrigger>
-                <SelectContent>
-                  {motoristas.map((m) => (
-                    <SelectItem key={m.id} value={String(m.id)}>{m.nome}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                onChange={(v) => setValue("motoristaId", v)}
+                placeholder="Buscar motorista..."
+              />
             </div>
 
             <div className="space-y-1.5">
               <Label>Cidade</Label>
-              <Select onValueChange={handleCidadeChange} value={watch("cidadeId")}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecionar cidade" />
-                </SelectTrigger>
-                <SelectContent>
-                  {cidades.map((c) => (
-                    <SelectItem key={c.id} value={String(c.id)}>
-                      {c.nome} ({c.distancia} km)
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <SearchableSelect
+                items={cidades}
+                value={watch("cidadeId")}
+                onChange={handleCidadeChange}
+                placeholder="Buscar cidade..."
+                renderLabel={(c) => `${c.nome} (${c.distancia} km)`}
+              />
             </div>
 
             <div className="space-y-1.5">
@@ -285,7 +338,13 @@ export function FreteDialog({ open, onOpenChange, frete, onSaved }: FreteDialogP
 
             <div className="space-y-1.5">
               <Label>R$/Ton Escritório</Label>
-              <Input type="number" step="0.01" {...register("valorTonEscritorio")} />
+              <Input
+                type="number"
+                step="0.01"
+                {...register("valorTonEscritorio")}
+                readOnly
+                className="bg-muted"
+              />
             </div>
 
             <div className="space-y-1.5">
@@ -303,6 +362,7 @@ export function FreteDialog({ open, onOpenChange, frete, onSaved }: FreteDialogP
                   <SelectItem value="DINHEIRO">Dinheiro</SelectItem>
                   <SelectItem value="PIX">PIX</SelectItem>
                   <SelectItem value="CHEQUE">Cheque</SelectItem>
+                  <SelectItem value="ABSORVIDO">Absorvido</SelectItem>
                 </SelectContent>
               </Select>
             </div>

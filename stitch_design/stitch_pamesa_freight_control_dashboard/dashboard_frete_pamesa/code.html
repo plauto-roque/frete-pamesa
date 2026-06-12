@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-br"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Frete PAMESA - Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Geist:wght@500;600;700;800&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container": "#102034",
+                    "surface-container-highest": "#26364a",
+                    "surface-variant": "#26364a",
+                    "tertiary-fixed": "#fcdeb5",
+                    "inverse-surface": "#d3e4fe",
+                    "on-background": "#d3e4fe",
+                    "on-surface": "#d3e4fe",
+                    "inverse-on-surface": "#213145",
+                    "error-container": "#93000a",
+                    "surface": "#031427",
+                    "on-tertiary": "#3e2d11",
+                    "on-tertiary-fixed-variant": "#574425",
+                    "surface-container-high": "#1b2b3f",
+                    "on-tertiary-container": "#957d5a",
+                    "on-surface-variant": "#c6c6cd",
+                    "secondary-fixed-dim": "#c4c6d1",
+                    "on-primary-container": "#798098",
+                    "primary-fixed-dim": "#bec6e0",
+                    "on-error": "#690005",
+                    "surface-bright": "#2a3a4f",
+                    "on-primary": "#283044",
+                    "error": "#ffb4ab",
+                    "inverse-primary": "#565e74",
+                    "tertiary-fixed-dim": "#dec29a",
+                    "secondary-container": "#444650",
+                    "outline-variant": "#45464d",
+                    "secondary-fixed": "#e1e2ed",
+                    "surface-dim": "#031427",
+                    "on-secondary-container": "#b3b4c0",
+                    "primary-fixed": "#dae2fd",
+                    "surface-container-lowest": "#000f21",
+                    "on-error-container": "#ffdad6",
+                    "tertiary-container": "#231500",
+                    "primary-container": "#0f172a",
+                    "on-secondary-fixed-variant": "#444650",
+                    "on-secondary-fixed": "#191b24",
+                    "surface-tint": "#bec6e0",
+                    "surface-container-low": "#0b1c30",
+                    "on-primary-fixed-variant": "#3f465c",
+                    "background": "#031427",
+                    "on-primary-fixed": "#131b2e",
+                    "on-tertiary-fixed": "#271901",
+                    "outline": "#909097",
+                    "on-secondary": "#2d3039",
+                    "secondary": "#c4c6d1",
+                    "tertiary": "#dec29a",
+                    "primary": "#bec6e0"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "xs": "8px",
+                    "lg": "24px",
+                    "base": "4px",
+                    "2xl": "48px",
+                    "gutter": "16px",
+                    "md": "16px",
+                    "margin": "24px",
+                    "sm": "12px",
+                    "xl": "32px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Geist"],
+                    "display": ["Geist"],
+                    "body-lg": ["Inter"],
+                    "display-mobile": ["Geist"],
+                    "body-sm": ["Inter"],
+                    "body-md": ["Inter"],
+                    "label-mono": ["JetBrains Mono"],
+                    "headline-lg": ["Geist"]
+            },
+            "fontSize": {
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "500"}],
+                    "display": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "display-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "body-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "label-mono": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+      body {
+        background-color: #031427;
+        color: #d3e4fe;
+        scrollbar-width: thin;
+        scrollbar-color: #26364a #031427;
+      }
+      .glass-border {
+        border: 1px solid transparent;
+        background-clip: padding-box, border-box;
+        background-origin: padding-box, border-box;
+        background-image: linear-gradient(to bottom right, #0f172a, #0f172a), linear-gradient(to bottom right, #334155, #1e293b);
+      }
+      .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+      .custom-scrollbar::-webkit-scrollbar-track { background: #031427; }
+      .custom-scrollbar::-webkit-scrollbar-thumb { background: #26364a; border-radius: 10px; }
+    </style>
+</head>
+<body class="font-body-md text-body-md overflow-x-hidden">
+<!-- Sidebar Navigation -->
+<aside class="w-[240px] h-screen fixed left-0 top-0 bg-surface-container shadow-sm flex flex-col py-lg z-20 hidden md:flex">
+<div class="px-md mb-xl">
+<h1 class="font-headline-lg text-headline-lg text-on-surface font-bold tracking-tighter">Frete PAMESA</h1>
+<p class="text-on-surface-variant font-body-sm opacity-70">Logística Integrada</p>
+</div>
+<nav class="flex-1 px-sm space-y-base">
+<!-- Active Tab -->
+<a class="flex items-center gap-md px-md py-sm text-primary font-bold border-r-2 border-primary bg-surface-container-highest transition-colors rounded-l-lg" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-container-highest transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">local_shipping</span>
+<span>Fretes</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-container-highest transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">groups</span>
+<span>Clientes</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-container-highest transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">badge</span>
+<span>Motoristas</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-container-highest transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">location_city</span>
+<span>Cidades</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-container-highest transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span>Relatórios</span>
+</a>
+</nav>
+<div class="px-md mt-auto pt-lg border-t border-outline-variant">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary font-bold">P</div>
+<div>
+<p class="font-body-sm font-bold text-on-surface">Pamesa Admin</p>
+<p class="text-[10px] text-on-surface-variant">Gestão Operacional</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="md:ml-[240px] min-h-screen relative">
+<!-- Top App Bar -->
+<header class="h-16 sticky top-0 right-0 bg-surface border-b border-outline-variant z-10 flex items-center justify-between px-xl">
+<div class="flex items-center flex-1">
+<div class="relative max-w-md w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-full py-1.5 pl-10 pr-4 text-body-sm focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all" placeholder="Buscar cargas, clientes ou motoristas..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-lg">
+<button class="relative hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="hover:text-primary transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant">
+<img alt="User Avatar" class="w-full h-full object-cover" data-alt="A professional headshot of a corporate manager in a high-tech logistics firm. The subject is a middle-aged man with a confident expression, set against a blurred background of a modern office with subtle blue and slate lighting. The aesthetic is clean, high-contrast, and fits a premium enterprise software interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBx_kQ5kG-W86s3RUIRAfD2Iu8-AUD_vNVYztxOpko70o7SycMVe5Q1w2qbIqF44v24LRoCJDlgS85NF5AnDvB288UV-HXQoSA3BJbJyRxurpCScyzLfTU6LhfAVAyOfYzXBMmcqiN0POcHKrt2JvhF2Bcy-LZUF9dirX6smxVz0lAXHkD2eXjAIBCkSApt7OlZoJcjKG-7hxG2s5fFg1EQ-t6PiKAKxD8JE7wVaT7vHtXnnLz3vEr4vLy-VX1eJSiufDDTsz1VELk"/>
+</div>
+</div>
+</header>
+<!-- Dashboard Canvas -->
+<div class="p-lg space-y-lg">
+<!-- Page Header -->
+<div class="flex justify-between items-end">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Visão Geral</h2>
+<p class="text-on-surface-variant text-body-sm">Acompanhamento em tempo real da operação logística.</p>
+</div>
+<div class="flex gap-sm">
+<button class="bg-surface-container-highest border border-outline-variant text-on-surface-variant px-md py-1.5 rounded-lg text-body-sm hover:text-on-surface transition-colors">Exportar PDF</button>
+<button class="bg-primary text-on-primary px-md py-1.5 rounded-lg text-body-sm font-bold shadow-lg shadow-primary/20 hover:opacity-90 transition-opacity flex items-center gap-xs">
+<span class="material-symbols-outlined text-[18px]">add</span> Novo Frete
+                    </button>
+</div>
+</div>
+<!-- KPI Cards Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
+<!-- KPI 1 -->
+<div class="glass-border p-md rounded-xl space-y-sm">
+<div class="flex justify-between items-start">
+<span class="text-on-surface-variant font-body-sm">Faturamento do Mês</span>
+<div class="p-2 bg-primary/10 rounded-lg">
+<span class="material-symbols-outlined text-primary text-[20px]">payments</span>
+</div>
+</div>
+<div>
+<h3 class="text-headline-md font-bold text-on-surface">R$ 142.580,00</h3>
+<div class="flex items-center gap-xs mt-1 text-emerald-400 font-body-sm">
+<span class="material-symbols-outlined text-[14px]">trending_up</span>
+<span>12.5% vs mês ant.</span>
+</div>
+</div>
+</div>
+<!-- KPI 2 -->
+<div class="glass-border p-md rounded-xl space-y-sm">
+<div class="flex justify-between items-start">
+<span class="text-on-surface-variant font-body-sm">Receita Escritório</span>
+<div class="p-2 bg-tertiary/10 rounded-lg">
+<span class="material-symbols-outlined text-tertiary text-[20px]">account_balance</span>
+</div>
+</div>
+<div>
+<h3 class="text-headline-md font-bold text-on-surface">R$ 28.516,00</h3>
+<p class="text-on-surface-variant text-body-sm mt-1">Margem de 20.0%</p>
+</div>
+</div>
+<!-- KPI 3 -->
+<div class="glass-border p-md rounded-xl space-y-sm">
+<div class="flex justify-between items-start">
+<span class="text-on-surface-variant font-body-sm">A Receber (Clientes)</span>
+<div class="p-2 bg-secondary/10 rounded-lg">
+<span class="material-symbols-outlined text-secondary text-[20px]">pending_actions</span>
+</div>
+</div>
+<div>
+<h3 class="text-headline-md font-bold text-on-surface">R$ 12.440,00</h3>
+<p class="text-on-surface-variant text-body-sm mt-1">8 faturas pendentes</p>
+</div>
+</div>
+<!-- KPI 4 -->
+<div class="glass-border p-md rounded-xl space-y-sm">
+<div class="flex justify-between items-start">
+<span class="text-on-surface-variant font-body-sm">A Pagar (Motoristas)</span>
+<div class="p-2 bg-error/10 rounded-lg">
+<span class="material-symbols-outlined text-error text-[20px]">outbox</span>
+</div>
+</div>
+<div>
+<h3 class="text-headline-md font-bold text-on-surface">R$ 114.064,00</h3>
+<p class="text-on-surface-variant text-body-sm mt-1">Vencimento em 2 dias</p>
+</div>
+</div>
+</div>
+<!-- Dashboard Layout: Chart & Top Clients -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-lg">
+<!-- Stacked Bar Chart -->
+<div class="lg:col-span-2 glass-border p-lg rounded-xl flex flex-col min-h-[400px]">
+<div class="flex justify-between items-center mb-xl">
+<div>
+<h4 class="font-headline-md text-on-surface">Evolução de Receita</h4>
+<p class="text-on-surface-variant text-body-sm">Divisão entre custo motorista e lucro operacional.</p>
+</div>
+<div class="flex gap-md">
+<div class="flex items-center gap-xs">
+<span class="w-3 h-3 rounded-sm bg-primary"></span>
+<span class="text-[10px] text-on-surface-variant uppercase tracking-wider font-bold">Motorista</span>
+</div>
+<div class="flex items-center gap-xs">
+<span class="w-3 h-3 rounded-sm bg-tertiary"></span>
+<span class="text-[10px] text-on-surface-variant uppercase tracking-wider font-bold">Escritório</span>
+</div>
+</div>
+</div>
+<div class="flex-1 flex items-end justify-around gap-lg px-md relative">
+<!-- Y-axis Guidelines -->
+<div class="absolute inset-0 flex flex-col justify-between opacity-10 pointer-events-none">
+<div class="w-full border-t border-on-surface"></div>
+<div class="w-full border-t border-on-surface"></div>
+<div class="w-full border-t border-on-surface"></div>
+<div class="w-full border-t border-on-surface"></div>
+</div>
+<!-- Bars -->
+<div class="flex flex-col items-center gap-sm flex-1 max-w-[48px]">
+<div class="w-full flex flex-col rounded-t-sm overflow-hidden h-[60%]">
+<div class="bg-tertiary h-[20%]"></div>
+<div class="bg-primary h-[80%]"></div>
+</div>
+<span class="text-[10px] text-on-surface-variant">JAN</span>
+</div>
+<div class="flex flex-col items-center gap-sm flex-1 max-w-[48px]">
+<div class="w-full flex flex-col rounded-t-sm overflow-hidden h-[75%]">
+<div class="bg-tertiary h-[15%]"></div>
+<div class="bg-primary h-[85%]"></div>
+</div>
+<span class="text-[10px] text-on-surface-variant">FEV</span>
+</div>
+<div class="flex flex-col items-center gap-sm flex-1 max-w-[48px]">
+<div class="w-full flex flex-col rounded-t-sm overflow-hidden h-[90%]">
+<div class="bg-tertiary h-[18%]"></div>
+<div class="bg-primary h-[82%]"></div>
+</div>
+<span class="text-[10px] text-on-surface-variant">MAR</span>
+</div>
+<div class="flex flex-col items-center gap-sm flex-1 max-w-[48px]">
+<div class="w-full flex flex-col rounded-t-sm overflow-hidden h-[85%]">
+<div class="bg-tertiary h-[22%]"></div>
+<div class="bg-primary h-[78%]"></div>
+</div>
+<span class="text-[10px] text-on-surface-variant">ABR</span>
+</div>
+<div class="flex flex-col items-center gap-sm flex-1 max-w-[48px]">
+<div class="w-full flex flex-col rounded-t-sm overflow-hidden h-[95%]">
+<div class="bg-tertiary h-[20%]"></div>
+<div class="bg-primary h-[80%]"></div>
+</div>
+<span class="text-[10px] text-on-surface-variant">MAI</span>
+</div>
+</div>
+</div>
+<!-- Top Clients Section -->
+<div class="glass-border p-lg rounded-xl flex flex-col h-full">
+<div class="mb-lg">
+<h4 class="font-headline-md text-on-surface">Top Clientes</h4>
+<p class="text-on-surface-variant text-body-sm">Maiores volumes por faturamento.</p>
+</div>
+<div class="space-y-md flex-1">
+<!-- Client Item 1 -->
+<div class="p-sm rounded-lg bg-surface-container-low border border-outline-variant flex items-center justify-between hover:bg-surface-container transition-colors group cursor-pointer">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded bg-primary-container flex items-center justify-center font-bold text-primary group-hover:scale-105 transition-transform">AM</div>
+<div>
+<p class="text-body-md font-bold text-on-surface">Alimentos Mauá</p>
+<p class="text-[11px] text-on-surface-variant uppercase tracking-tighter">18 Viagens / Mês</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-body-md font-bold text-primary">R$ 45k</p>
+<span class="material-symbols-outlined text-primary text-[14px]">arrow_forward</span>
+</div>
+</div>
+<!-- Client Item 2 -->
+<div class="p-sm rounded-lg bg-surface-container-low border border-outline-variant flex items-center justify-between hover:bg-surface-container transition-colors group cursor-pointer">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded bg-tertiary-container flex items-center justify-center font-bold text-tertiary group-hover:scale-105 transition-transform">TR</div>
+<div>
+<p class="text-body-md font-bold text-on-surface">TransRio Log</p>
+<p class="text-[11px] text-on-surface-variant uppercase tracking-tighter">12 Viagens / Mês</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-body-md font-bold text-primary">R$ 32k</p>
+<span class="material-symbols-outlined text-primary text-[14px]">arrow_forward</span>
+</div>
+</div>
+<!-- Client Item 3 -->
+<div class="p-sm rounded-lg bg-surface-container-low border border-outline-variant flex items-center justify-between hover:bg-surface-container transition-colors group cursor-pointer">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded bg-secondary-container flex items-center justify-center font-bold text-secondary group-hover:scale-105 transition-transform">SC</div>
+<div>
+<p class="text-body-md font-bold text-on-surface">Serrana Cargas</p>
+<p class="text-[11px] text-on-surface-variant uppercase tracking-tighter">9 Viagens / Mês</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-body-md font-bold text-primary">R$ 28k</p>
+<span class="material-symbols-outlined text-primary text-[14px]">arrow_forward</span>
+</div>
+</div>
+</div>
+<button class="mt-lg w-full py-2 text-on-surface-variant text-body-sm hover:text-primary transition-colors border-t border-outline-variant pt-lg">Ver todos os clientes</button>
+</div>
+</div>
+<!-- Latest Freight Trips Table -->
+<div class="glass-border rounded-xl overflow-hidden">
+<div class="p-lg border-b border-outline-variant flex justify-between items-center bg-surface-container-low/50">
+<h4 class="font-headline-md text-on-surface">Últimas Viagens</h4>
+<div class="flex gap-xs">
+<button class="p-1.5 rounded-lg border border-outline-variant hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined text-[20px]">filter_list</span>
+</button>
+<button class="p-1.5 rounded-lg border border-outline-variant hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined text-[20px]">refresh</span>
+</button>
+</div>
+</div>
+<div class="overflow-x-auto custom-scrollbar">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container/30 border-b border-outline-variant">
+<th class="px-lg py-md text-[11px] font-bold text-on-surface-variant uppercase tracking-widest">Data</th>
+<th class="px-lg py-md text-[11px] font-bold text-on-surface-variant uppercase tracking-widest">Cliente</th>
+<th class="px-lg py-md text-[11px] font-bold text-on-surface-variant uppercase tracking-widest">Motorista</th>
+<th class="px-lg py-md text-[11px] font-bold text-on-surface-variant uppercase tracking-widest">Valor</th>
+<th class="px-lg py-md text-[11px] font-bold text-on-surface-variant uppercase tracking-widest">Status</th>
+<th class="px-lg py-md text-[11px] font-bold text-on-surface-variant uppercase tracking-widest"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr class="hover:bg-surface-container-highest/30 transition-colors group">
+<td class="px-lg py-sm font-label-mono text-on-surface">24/10/2023</td>
+<td class="px-lg py-sm">
+<p class="font-bold text-on-surface">Alimentos Mauá</p>
+<p class="text-[10px] text-on-surface-variant">Carga: Grãos</p>
+</td>
+<td class="px-lg py-sm flex items-center gap-sm">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest border border-outline-variant flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Close-up portrait of a truck driver in their thirties, wearing a trucker hat and a denim jacket, looking at the camera with a friendly gaze. The lighting is warm and sunset-like, reflecting off the window of a heavy vehicle. The style is cinematic with a focus on human grit and professionalism in the logistics industry." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIbe7u7d2O2lJzpm24_OMCYf28_4Hi5r9HPyACRrsxyxl3ja7Gr3BYwc1iccbxfbB7sJfiEXbA4w1zIIjLk9_hznHQebDLLnZObCqcvQICxuJAlwnkdCwov6OXlB7Cb99CiySndk48_SSB0rzXfznbKwQ3X_kXzuHs3Wvju1A3caOhR8G1Fc-NEZ1l3tla03CsRL3z8Ry96n9Bn24Wq9LsuZ-iBbXtZY0f-v0KchLKgUwSDtxpCeouRB75D8lM-JdPgpi_wwFnvpM"/>
+</div>
+<span class="text-on-surface">Ricardo Silva</span>
+</td>
+<td class="px-lg py-sm font-bold text-primary">R$ 5.800,00</td>
+<td class="px-lg py-sm">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Pago</span>
+</td>
+<td class="px-lg py-sm text-right opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary">more_vert</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-highest/30 transition-colors group">
+<td class="px-lg py-sm font-label-mono text-on-surface">24/10/2023</td>
+<td class="px-lg py-sm">
+<p class="font-bold text-on-surface">TransRio Log</p>
+<p class="text-[10px] text-on-surface-variant">Carga: Industrial</p>
+</td>
+<td class="px-lg py-sm flex items-center gap-sm">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest border border-outline-variant flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A portrait of a male driver in high-visibility safety gear, standing next to a large logistics vehicle in a busy shipping yard. The ambient lighting is cool and blue, suggesting early morning operations. High-end professional photography style for an enterprise dashobard application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8uwPTzSJZMHqYOJ7aWYVCVasnQlA4kV3TuOn0USbxu1ntKhKMrKCOkr8qA_R8XllDVjf7zZBoTzSp_sHN1RuRWZrmwXTuVMjwao3bzxGHyZ-f2K983Y1AtF52xanBi9neR-IT14Ch09B58ErjMHmrQTXmf4gQiYBAaRiSsl9sVqKNw0f4HCsqD9RYlcxt8F6ISl5AzORzYrH5Q5xnPMN9pt7n6kYSQbRgIPvgs1tcNZ-BtJ49QbXUiw0Fi88WmnL5xDo0KDzVdwI"/>
+</div>
+<span class="text-on-surface">Marcos Oliveira</span>
+</td>
+<td class="px-lg py-sm font-bold text-primary">R$ 3.250,00</td>
+<td class="px-lg py-sm">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide bg-amber-500/10 text-amber-400 border border-amber-500/20">Pendente</span>
+</td>
+<td class="px-lg py-sm text-right opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary">more_vert</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-highest/30 transition-colors group">
+<td class="px-lg py-sm font-label-mono text-on-surface">23/10/2023</td>
+<td class="px-lg py-sm">
+<p class="font-bold text-on-surface">Serrana Cargas</p>
+<p class="text-[10px] text-on-surface-variant">Carga: Perecíveis</p>
+</td>
+<td class="px-lg py-sm flex items-center gap-sm">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest border border-outline-variant flex items-center justify-center overflow-hidden text-[10px] font-bold text-on-surface-variant">AS</div>
+<span class="text-on-surface">Antônio Souza</span>
+</td>
+<td class="px-lg py-sm font-bold text-primary">R$ 7.420,00</td>
+<td class="px-lg py-sm">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Pago</span>
+</td>
+<td class="px-lg py-sm text-right opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary">more_vert</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-highest/30 transition-colors group">
+<td class="px-lg py-sm font-label-mono text-on-surface">23/10/2023</td>
+<td class="px-lg py-sm">
+<p class="font-bold text-on-surface">Móveis Estrela</p>
+<p class="text-[10px] text-on-surface-variant">Carga: Mobiliário</p>
+</td>
+<td class="px-lg py-sm flex items-center gap-sm">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest border border-outline-variant flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A portrait of a senior logistics coordinator in a modern control room. The background features blurred digital map screens and fleet tracking data. The subject is wearing a professional polo shirt and has a focused, experienced expression. The color palette is deep navy and slate, fitting the high-utility minimalist UI." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBd-RNu0Pzgm9AAexg90AmY8i468sMT3dirPfEIAIc37CZw-PE1vD6YoxNJI2dvojGB6xwwlbwOWmqifKJ3T1Wea8CEPO_R67Hy9Jgk_b9YtiXPhxbYxyGTbYQmUNLPqGOHUqCRVjeNLs3y6H1gaMgDnoLI4BYSQL4ZOVCAhU56D_w0Hlg5ioXyIdEIE0o3_r5l4-Kgebl2qAaBx5-8CYvgW6D5HR2jgvT1xmKP-WurJGGpzgxwsLr6mL__fQcMyO-nvFnj-2n0xKI"/>
+</div>
+<span class="text-on-surface">Fernando Lima</span>
+</td>
+<td class="px-lg py-sm font-bold text-primary">R$ 2.900,00</td>
+<td class="px-lg py-sm">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Pago</span>
+</td>
+<td class="px-lg py-sm text-right opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary">more_vert</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-md bg-surface-container-low/50 flex justify-center border-t border-outline-variant">
+<button class="text-body-sm text-primary font-bold hover:underline">Ver Histórico Completo</button>
+</div>
+</div>
+</div>
+<!-- Footer Floating Status (Mobile-Friendly indicator) -->
+<div class="fixed bottom-lg right-lg md:hidden">
+<button class="w-14 h-14 bg-primary text-on-primary rounded-full shadow-2xl flex items-center justify-center">
+<span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 1;">add</span>
+</button>
+</div>
+</main>
+<!-- Bottom Navigation Bar (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 right-0 h-16 bg-surface-container flex md:hidden items-center justify-around z-20 border-t border-outline-variant/30">
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="text-[10px] font-bold uppercase tracking-widest">Início</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">local_shipping</span>
+<span class="text-[10px] uppercase tracking-widest">Fretes</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">groups</span>
+<span class="text-[10px] uppercase tracking-widest">Clientes</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">menu</span>
+<span class="text-[10px] uppercase tracking-widest">Menu</span>
+</a>
+</nav>
+<script>
+        // Simple interactive feedback for dashboard items
+        document.querySelectorAll('.glass-border').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-2px)';
+                card.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body></html>

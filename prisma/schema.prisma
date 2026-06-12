@@ -36,7 +36,7 @@ model ContaBancaria {
   nomeConta   String?
   cpf         String?
   banco       String?
-  numeroBanco String?
+  chavePix    String?
   tipoConta   String?
   agencia     String?
   conta       String?

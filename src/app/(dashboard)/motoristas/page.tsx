@@ -9,13 +9,65 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Pencil, Trash2, CreditCard } from "lucide-react";
 import { toast } from "sonner";
 
+const BANCOS_BACEN = [
+  "Agibank",
+  "Banco ABC Brasil",
+  "Banco Banestes",
+  "Banco Banpará",
+  "Banco Banrisul",
+  "Banco BMG",
+  "Banco BRB",
+  "Banco BS2",
+  "Banco BTG Pactual",
+  "Banco C6",
+  "Banco da Amazônia",
+  "Banco Daycoval",
+  "Banco do Brasil",
+  "Banco do Nordeste do Brasil",
+  "Banco Industrial",
+  "Banco Inter",
+  "Banco Master",
+  "Banco Mercantil do Brasil",
+  "Banco Modal",
+  "Banco Original",
+  "Banco Pan",
+  "Banco Safra",
+  "Banco Votorantim",
+  "Bradesco",
+  "Caixa Econômica Federal",
+  "Itaú Unibanco",
+  "Mercado Pago",
+  "Neon",
+  "Next",
+  "Nubank",
+  "PagBank",
+  "PicPay",
+  "Santander",
+  "Sicoob",
+  "Sicredi",
+  "Will Bank",
+  "XP Investimentos",
+].sort();
+
 interface ContaBancaria {
-  nomeConta?: string; cpf?: string; banco?: string;
-  numeroBanco?: string; tipoConta?: string; agencia?: string; conta?: string;
+  nomeConta?: string;
+  cpf?: string;
+  banco?: string;
+  chavePix?: string;
+  tipoConta?: string;
+  agencia?: string;
+  conta?: string;
 }
 
 interface Motorista {
@@ -26,7 +78,7 @@ interface Motorista {
 }
 
 const EMPTY_CONTA: ContaBancaria = {
-  nomeConta: "", cpf: "", banco: "", numeroBanco: "", tipoConta: "", agencia: "", conta: ""
+  nomeConta: "", cpf: "", banco: "", chavePix: "", tipoConta: "", agencia: "", conta: "",
 };
 
 export default function MotoristasPage() {
@@ -139,6 +191,7 @@ export default function MotoristasPage() {
                 <th className="px-6 py-3 text-left text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Telefone</th>
                 <th className="px-6 py-3 text-left text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Banco</th>
                 <th className="px-6 py-3 text-left text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Conta</th>
+                <th className="px-6 py-3 text-left text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Chave PIX</th>
                 <th className="px-6 py-3 w-20" />
               </tr>
             </thead>
@@ -149,7 +202,12 @@ export default function MotoristasPage() {
                   <td className="px-6 py-3 text-sm text-on-surface-variant font-mono">{m.telefone ?? "—"}</td>
                   <td className="px-6 py-3 text-sm text-on-surface-variant">{m.conta?.banco ?? "—"}</td>
                   <td className="px-6 py-3 text-sm text-on-surface-variant font-mono">
-                    {m.conta ? `Ag. ${m.conta.agencia} | CC ${m.conta.conta}` : "—"}
+                    {m.conta?.agencia || m.conta?.conta
+                      ? `Ag. ${m.conta.agencia ?? "—"} | CC ${m.conta.conta ?? "—"}`
+                      : "—"}
+                  </td>
+                  <td className="px-6 py-3 text-sm text-on-surface-variant font-mono">
+                    {m.conta?.chavePix ?? "—"}
                   </td>
                   <td className="px-6 py-3">
                     <div className="flex gap-1">
@@ -208,11 +266,28 @@ export default function MotoristasPage() {
               <div className="grid grid-cols-2 gap-3">
                 {contaField("nomeConta", "Nome na conta")}
                 {contaField("cpf", "CPF", "000.000.000-00")}
-                {contaField("banco", "Banco")}
-                {contaField("numeroBanco", "Cód. banco")}
+
+                <div className="space-y-1.5">
+                  <Label>Banco</Label>
+                  <Select
+                    value={conta.banco ?? ""}
+                    onValueChange={(v) => setConta((prev) => ({ ...prev, banco: v }))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecionar banco" />
+                    </SelectTrigger>
+                    <SelectContent className="max-h-56">
+                      {BANCOS_BACEN.map((b) => (
+                        <SelectItem key={b} value={b}>{b}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
                 {contaField("tipoConta", "Tipo de conta")}
                 {contaField("agencia", "Agência")}
                 {contaField("conta", "Número da conta")}
+                {contaField("chavePix", "Chave PIX")}
               </div>
             )}
 
