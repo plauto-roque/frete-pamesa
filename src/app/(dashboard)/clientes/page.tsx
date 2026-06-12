@@ -272,8 +272,8 @@ export default function ClientesPage() {
               <div className="grid grid-cols-6 gap-3">
                 {field("logradouro", "Logradouro", "Rua, Av., etc.", "col-span-4")}
                 {field("numero", "Nº", "", "col-span-2")}
-                {field("bairro", "Bairro", "", "col-span-2")}
-                {field("cidade", "Cidade", "", "col-span-2")}
+                {field("bairro", "Bairro", "", "col-span-3")}
+                {field("cidade", "Cidade", "", "col-span-3")}
                 <div className="space-y-1.5 col-span-1">
                   <Label>UF</Label>
                   <Select
@@ -290,7 +290,7 @@ export default function ClientesPage() {
                     </SelectContent>
                   </Select>
                 </div>
-                {field("cep", "CEP", "00000-000", "col-span-1")}
+                {field("cep", "CEP", "00000-000", "col-span-2")}
               </div>
             </div>
 
