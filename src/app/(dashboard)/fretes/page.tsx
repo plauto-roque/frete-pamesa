@@ -129,7 +129,7 @@ export default function FretesPage() {
             onChange={(e) => setFiltroDataFim(e.target.value)}
             className="w-40 bg-surface border-outline-variant text-on-surface"
           />
-          <Select value={filtroPagoCliente || "todos"} onValueChange={(v) => setFiltroPagoCliente(v === "todos" ? "" : v)}>
+          <Select value={filtroPagoCliente || "todos"} onValueChange={(v) => setFiltroPagoCliente(!v || v === "todos" ? "" : v)}>
             <SelectTrigger className="w-44 bg-surface border-outline-variant text-on-surface">
               <SelectValue placeholder="Pgto. cliente" />
             </SelectTrigger>
@@ -139,7 +139,7 @@ export default function FretesPage() {
               <SelectItem value="pendente">Pendente</SelectItem>
             </SelectContent>
           </Select>
-          <Select value={filtroPagoMotorista || "todos"} onValueChange={(v) => setFiltroPagoMotorista(v === "todos" ? "" : v)}>
+          <Select value={filtroPagoMotorista || "todos"} onValueChange={(v) => setFiltroPagoMotorista(!v || v === "todos" ? "" : v)}>
             <SelectTrigger className="w-44 bg-surface border-outline-variant text-on-surface">
               <SelectValue placeholder="Pgto. motorista" />
             </SelectTrigger>

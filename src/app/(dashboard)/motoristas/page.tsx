@@ -271,7 +271,7 @@ export default function MotoristasPage() {
                   <Label>Banco</Label>
                   <Select
                     value={conta.banco ?? ""}
-                    onValueChange={(v) => setConta((prev) => ({ ...prev, banco: v }))}
+                    onValueChange={(v) => setConta((prev) => ({ ...prev, banco: v ?? undefined }))}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Selecionar banco" />
