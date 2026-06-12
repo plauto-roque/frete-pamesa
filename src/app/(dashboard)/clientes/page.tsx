@@ -21,9 +21,9 @@ import { Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 const UFS = [
-  "PB",
+  "PB","RN","PE",
   "AC","AL","AP","AM","BA","CE","DF","ES","GO","MA",
-  "MT","MS","MG","PA","PR","PE","PI","RJ","RN",
+  "MT","MS","MG","PA","PR","PI","RJ",
   "RS","RO","RR","SC","SP","SE","TO",
 ];
 
