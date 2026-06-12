@@ -6,7 +6,10 @@ export async function GET() {
   const session = await auth();
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const clientes = await prisma.cliente.findMany({ orderBy: { nome: "asc" } });
+  const clientes = await prisma.cliente.findMany({
+    orderBy: { nome: "asc" },
+    include: { contatos: { orderBy: { nome: "asc" } } },
+  });
   return NextResponse.json(clientes);
 }
 

@@ -15,8 +15,8 @@ model User {
 }
 
 model Cliente {
-  id          Int      @id @default(autoincrement())
-  nome        String   @unique
+  id          Int       @id @default(autoincrement())
+  nome        String    @unique
   fantasia    String?
   cnpj        String?
   logradouro  String?
@@ -31,7 +31,19 @@ model Cliente {
   responsavel String?
   whatsapp    String?
   fretes      Frete[]
-  createdAt   DateTime @default(now())
+  contatos    Contato[]
+  createdAt   DateTime  @default(now())
+}
+
+model Contato {
+  id        Int      @id @default(autoincrement())
+  cliente   Cliente  @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+  clienteId Int
+  nome      String
+  telefone1 String?
+  telefone2 String?
+  email     String?
+  createdAt DateTime @default(now())
 }
 
 model Motorista {
