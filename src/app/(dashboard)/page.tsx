@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { KpiCard } from "@/components/dashboard/KpiCard";
 import { FaturamentoChart } from "@/components/dashboard/FaturamentoChart";
 import { formatBRL, formatDate } from "@/lib/format";
