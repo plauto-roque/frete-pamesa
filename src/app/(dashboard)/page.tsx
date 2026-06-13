@@ -10,6 +10,7 @@ async function getDashboardData() {
   const hoje = new Date();
   const inicioMes = startOfMonth(hoje);
   const fimMes = endOfMonth(hoje);
+  const inicio6Meses = startOfMonth(subMonths(hoje, 5));
 
   const [
     totalMes,
@@ -19,6 +20,8 @@ async function getDashboardData() {
     ultimasViagens,
     topClientesRaw,
     faturamentoMensal,
+    fretesAbsorvidosMensal,
+    topMotoristasRaw,
   ] = await Promise.all([
     prisma.frete.aggregate({
       where: { data: { gte: inicioMes, lte: fimMes } },
@@ -42,7 +45,7 @@ async function getDashboardData() {
     }),
     prisma.frete.groupBy({
       by: ["clienteId"],
-      where: { data: { gte: startOfMonth(subMonths(hoje, 5)) } },
+      where: { data: { gte: inicio6Meses } },
       _sum: { valorTotal: true },
       _count: true,
       orderBy: { _sum: { valorTotal: "desc" } },
@@ -66,14 +69,53 @@ async function getDashboardData() {
           }));
       })
     ),
+    Promise.all(
+      Array.from({ length: 6 }, (_, i) => {
+        const mes = subMonths(hoje, 5 - i);
+        const gte = startOfMonth(mes);
+        const lte = endOfMonth(mes);
+        return Promise.all([
+          prisma.frete.count({ where: { data: { gte, lte } } }),
+          prisma.frete.aggregate({
+            where: { data: { gte, lte }, pagoCliente: true },
+            _count: true,
+            _sum: { valorTotal: true },
+          }),
+        ]).then(([total, abs]) => ({
+          mes: format(mes, "MMM/yy"),
+          total,
+          absorvidos: abs._count,
+          pct: total > 0 ? Math.round((abs._count / total) * 100) : 0,
+          valor: abs._sum.valorTotal ?? 0,
+        }));
+      })
+    ),
+    prisma.frete.groupBy({
+      by: ["motoristaId"],
+      where: { data: { gte: inicio6Meses } },
+      _count: { motoristaId: true },
+      _sum: { valorMotorista: true },
+      orderBy: { _count: { motoristaId: "desc" } },
+      take: 5,
+    }),
   ]);
 
   const clienteIds = topClientesRaw.map((t) => t.clienteId);
-  const clientes = await prisma.cliente.findMany({
-    where: { id: { in: clienteIds } },
-    select: { id: true, nome: true },
-  });
+  const motoristaIds = topMotoristasRaw.map((t) => t.motoristaId);
+
+  const [clientes, motoristas] = await Promise.all([
+    prisma.cliente.findMany({
+      where: { id: { in: clienteIds } },
+      select: { id: true, nome: true },
+    }),
+    prisma.motorista.findMany({
+      where: { id: { in: motoristaIds } },
+      select: { id: true, nome: true },
+    }),
+  ]);
+
   const clienteMap = Object.fromEntries(clientes.map((c) => [c.id, c.nome]));
+  const motoristaMap = Object.fromEntries(motoristas.map((m) => [m.id, m.nome]));
 
   return {
     kpis: {
@@ -98,12 +140,19 @@ async function getDashboardData() {
       total: t._sum.valorTotal ?? 0,
       viagens: t._count,
     })),
+    fretesAbsorvidos: fretesAbsorvidosMensal,
+    topMotoristas: topMotoristasRaw.map((t) => ({
+      motoristaId: t.motoristaId,
+      nome: motoristaMap[t.motoristaId] ?? "Desconhecido",
+      viagens: t._count.motoristaId,
+      valorMotorista: t._sum.valorMotorista ?? 0,
+    })),
   };
 }
 
 export default async function DashboardPage() {
   const data = await getDashboardData();
-  const { kpis, faturamentoMensal, ultimasViagens, topClientes } = data;
+  const { kpis, faturamentoMensal, ultimasViagens, topClientes, fretesAbsorvidos, topMotoristas } = data;
 
   return (
     <div className="p-8 space-y-8">
@@ -180,6 +229,88 @@ export default async function DashboardPage() {
                   <div className="h-1 bg-surface-container-highest rounded-full overflow-hidden">
                     <div
                       className="h-full bg-primary/60 rounded-full"
+                      style={{ width: `${pct}%` }}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* Fretes Absorvidos + Motoristas Mais Ativos */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div className="glass-card rounded-xl p-6 lg:col-span-2">
+          <div className="mb-5">
+            <h3 className="text-base font-semibold text-on-surface">Fretes Absorvidos</h3>
+            <p className="text-xs text-on-surface-variant mt-0.5">Pagos pelo cliente — últimos 6 meses</p>
+          </div>
+          <div className="space-y-4">
+            {fretesAbsorvidos.map((m) => (
+              <div key={m.mes} className="space-y-1.5">
+                <div className="flex items-center gap-3 text-sm">
+                  <span className="font-mono text-on-surface-variant w-14 shrink-0">{m.mes}</span>
+                  <span className="text-on-surface-variant shrink-0">
+                    {m.absorvidos}/{m.total}
+                  </span>
+                  <span className="font-semibold text-on-surface font-mono flex-1 text-right">
+                    {formatBRL(m.valor)}
+                  </span>
+                  <span
+                    className={
+                      m.pct >= 80
+                        ? "text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shrink-0 w-14 text-center"
+                        : m.pct >= 50
+                        ? "text-xs font-semibold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 shrink-0 w-14 text-center"
+                        : "text-xs font-semibold px-2 py-0.5 rounded-full bg-red-500/10 text-red-400 border border-red-500/20 shrink-0 w-14 text-center"
+                    }
+                  >
+                    {m.pct}%
+                  </span>
+                </div>
+                <div className="h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+                  <div
+                    className={
+                      m.pct >= 80
+                        ? "h-full bg-emerald-500/50 rounded-full transition-all"
+                        : m.pct >= 50
+                        ? "h-full bg-amber-500/50 rounded-full transition-all"
+                        : "h-full bg-red-500/50 rounded-full transition-all"
+                    }
+                    style={{ width: `${m.pct}%` }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="glass-card rounded-xl p-6">
+          <div className="mb-5">
+            <h3 className="text-base font-semibold text-on-surface">Motoristas Mais Ativos</h3>
+            <p className="text-xs text-on-surface-variant mt-0.5">Últimos 6 meses</p>
+          </div>
+          <div className="space-y-4">
+            {topMotoristas.map((m, i) => {
+              const pct = (m.viagens / (topMotoristas[0]?.viagens || 1)) * 100;
+              return (
+                <div key={m.motoristaId} className="space-y-1.5">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="text-xs font-mono text-on-surface-variant shrink-0">
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <p className="text-sm text-on-surface truncate">{m.nome}</p>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <p className="text-sm font-semibold text-on-surface">{m.viagens}x</p>
+                      <p className="text-xs text-on-surface-variant">{formatBRL(m.valorMotorista)}</p>
+                    </div>
+                  </div>
+                  <div className="h-1 bg-surface-container-highest rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-secondary/60 rounded-full"
                       style={{ width: `${pct}%` }}
                     />
                   </div>
