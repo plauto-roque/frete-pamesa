@@ -35,7 +35,10 @@ export default function FretesPage() {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
 
+  const [motoristas, setMotoristas] = useState<{ id: number; nome: string }[]>([]);
+
   const [filtroCliente, setFiltroCliente] = useState("");
+  const [filtroMotoristaId, setFiltroMotoristaId] = useState("");
   const [filtroPagoCliente, setFiltroPagoCliente] = useState("");
   const [filtroPagoMotorista, setFiltroPagoMotorista] = useState("");
   const [filtroDataInicio, setFiltroDataInicio] = useState("");
@@ -44,11 +47,18 @@ export default function FretesPage() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editFrete, setEditFrete] = useState<Frete | null>(null);
 
+  useEffect(() => {
+    fetch("/api/motoristas")
+      .then((r) => r.json())
+      .then((data) => setMotoristas(data));
+  }, []);
+
   const LIMIT = 20;
 
   const fetchFretes = useCallback(async () => {
     setLoading(true);
     const params = new URLSearchParams({ page: String(page), limit: String(LIMIT) });
+    if (filtroMotoristaId) params.set("motoristaId", filtroMotoristaId);
     if (filtroPagoCliente === "pago") params.set("pagoCliente", "true");
     else if (filtroPagoCliente === "pendente") params.set("pagoCliente", "false");
     else if (filtroPagoCliente === "absorvido") params.set("tipoPagamento", "ABSORVIDO");
@@ -69,7 +79,7 @@ export default function FretesPage() {
     setFretes(items);
     setTotal(data.total);
     setLoading(false);
-  }, [page, filtroCliente, filtroPagoCliente, filtroPagoMotorista, filtroDataInicio, filtroDataFim]);
+  }, [page, filtroCliente, filtroMotoristaId, filtroPagoCliente, filtroPagoMotorista, filtroDataInicio, filtroDataFim]);
 
   useEffect(() => { fetchFretes(); }, [fetchFretes]);
 
@@ -130,6 +140,17 @@ export default function FretesPage() {
             onChange={(e) => setFiltroDataFim(e.target.value)}
             className="w-40 bg-surface border-outline-variant text-on-surface"
           />
+          <Select value={filtroMotoristaId || "todos"} onValueChange={(v) => { setFiltroMotoristaId(!v || v === "todos" ? "" : v); setPage(1); }}>
+            <SelectTrigger className="w-52 bg-surface border-outline-variant text-on-surface">
+              <SelectValue placeholder="Motorista" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="todos">Todos os motoristas</SelectItem>
+              {motoristas.map((m) => (
+                <SelectItem key={m.id} value={String(m.id)}>{m.nome}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           <Select value={filtroPagoCliente || "todos"} onValueChange={(v) => setFiltroPagoCliente(!v || v === "todos" ? "" : v)}>
             <SelectTrigger className="w-44 bg-surface border-outline-variant text-on-surface">
               <SelectValue placeholder="Pgto. cliente" />
