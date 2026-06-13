@@ -16,6 +16,7 @@ export async function GET(req: NextRequest) {
   const dataFim = searchParams.get("dataFim");
   const pagoCliente = searchParams.get("pagoCliente");
   const pagoMotorista = searchParams.get("pagoMotorista");
+  const tipoPagamento = searchParams.get("tipoPagamento");
 
   const where = {
     ...(clienteId && { clienteId: Number(clienteId) }),
@@ -29,6 +30,7 @@ export async function GET(req: NextRequest) {
           },
         }
       : {}),
+    ...(tipoPagamento ? { tipoPagamento } : {}),
     ...(pagoCliente !== null && pagoCliente !== ""
       ? { pagoCliente: pagoCliente === "true" }
       : {}),

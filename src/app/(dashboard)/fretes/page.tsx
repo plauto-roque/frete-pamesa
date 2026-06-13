@@ -51,6 +51,7 @@ export default function FretesPage() {
     const params = new URLSearchParams({ page: String(page), limit: String(LIMIT) });
     if (filtroPagoCliente === "pago") params.set("pagoCliente", "true");
     else if (filtroPagoCliente === "pendente") params.set("pagoCliente", "false");
+    else if (filtroPagoCliente === "absorvido") params.set("tipoPagamento", "ABSORVIDO");
     if (filtroPagoMotorista === "pago") params.set("pagoMotorista", "true");
     else if (filtroPagoMotorista === "pendente") params.set("pagoMotorista", "false");
     if (filtroDataInicio) params.set("dataInicio", filtroDataInicio);
@@ -137,6 +138,7 @@ export default function FretesPage() {
               <SelectItem value="todos">Todos</SelectItem>
               <SelectItem value="pago">Pago</SelectItem>
               <SelectItem value="pendente">Pendente</SelectItem>
+              <SelectItem value="absorvido">Absorvido</SelectItem>
             </SelectContent>
           </Select>
           <Select value={filtroPagoMotorista || "todos"} onValueChange={(v) => setFiltroPagoMotorista(!v || v === "todos" ? "" : v)}>
@@ -208,17 +210,23 @@ export default function FretesPage() {
                       {formatBRL(f.valorEscritorio)}
                     </td>
                     <td className="px-6 py-3 text-center">
-                      <button onClick={() => togglePago(f.id, "pagoCliente", f.pagoCliente)}>
-                        <span
-                          className={
-                            f.pagoCliente
-                              ? "text-xs px-2.5 py-0.5 rounded-full font-semibold cursor-pointer select-none bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 transition-colors"
-                              : "text-xs px-2.5 py-0.5 rounded-full font-semibold cursor-pointer select-none bg-amber-500/10 text-amber-400 border border-amber-500/20 hover:bg-amber-500/20 transition-colors"
-                          }
-                        >
-                          {f.pagoCliente ? "Pago" : "Pendente"}
+                      {f.tipoPagamento === "ABSORVIDO" ? (
+                        <span className="text-xs px-2.5 py-0.5 rounded-full font-semibold bg-violet-500/10 text-violet-400 border border-violet-500/20">
+                          Absorvido
                         </span>
-                      </button>
+                      ) : (
+                        <button onClick={() => togglePago(f.id, "pagoCliente", f.pagoCliente)}>
+                          <span
+                            className={
+                              f.pagoCliente
+                                ? "text-xs px-2.5 py-0.5 rounded-full font-semibold cursor-pointer select-none bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 transition-colors"
+                                : "text-xs px-2.5 py-0.5 rounded-full font-semibold cursor-pointer select-none bg-amber-500/10 text-amber-400 border border-amber-500/20 hover:bg-amber-500/20 transition-colors"
+                            }
+                          >
+                            {f.pagoCliente ? "Pago" : "Pendente"}
+                          </span>
+                        </button>
+                      )}
                     </td>
                     <td className="px-6 py-3 text-center">
                       <button onClick={() => togglePago(f.id, "pagoMotorista", f.pagoMotorista)}>
