@@ -74,20 +74,17 @@ async function getDashboardData() {
         const mes = subMonths(hoje, 5 - i);
         const gte = startOfMonth(mes);
         const lte = endOfMonth(mes);
-        return Promise.all([
-          prisma.frete.count({ where: { data: { gte, lte } } }),
-          prisma.frete.aggregate({
-            where: { data: { gte, lte }, pagoCliente: true },
+        return prisma.frete
+          .aggregate({
+            where: { data: { gte, lte }, tipoPagamento: "ABSORVIDO" },
             _count: true,
             _sum: { valorTotal: true },
-          }),
-        ]).then(([total, abs]) => ({
-          mes: format(mes, "MMM/yy"),
-          total,
-          absorvidos: abs._count,
-          pct: total > 0 ? Math.round((abs._count / total) * 100) : 0,
-          valor: abs._sum.valorTotal ?? 0,
-        }));
+          })
+          .then((r) => ({
+            mes: format(mes, "MMM/yy"),
+            count: r._count,
+            valor: r._sum.valorTotal ?? 0,
+          }));
       })
     ),
     prisma.frete.groupBy({
@@ -244,45 +241,31 @@ export default async function DashboardPage() {
         <div className="glass-card rounded-xl p-6 lg:col-span-2">
           <div className="mb-5">
             <h3 className="text-base font-semibold text-on-surface">Fretes Absorvidos</h3>
-            <p className="text-xs text-on-surface-variant mt-0.5">Pagos pelo cliente — últimos 6 meses</p>
+            <p className="text-xs text-on-surface-variant mt-0.5">Arcados pelo escritório — últimos 6 meses</p>
           </div>
           <div className="space-y-4">
-            {fretesAbsorvidos.map((m) => (
-              <div key={m.mes} className="space-y-1.5">
-                <div className="flex items-center gap-3 text-sm">
-                  <span className="font-mono text-on-surface-variant w-14 shrink-0">{m.mes}</span>
-                  <span className="text-on-surface-variant shrink-0">
-                    {m.absorvidos}/{m.total}
-                  </span>
-                  <span className="font-semibold text-on-surface font-mono flex-1 text-right">
-                    {formatBRL(m.valor)}
-                  </span>
-                  <span
-                    className={
-                      m.pct >= 80
-                        ? "text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shrink-0 w-14 text-center"
-                        : m.pct >= 50
-                        ? "text-xs font-semibold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 shrink-0 w-14 text-center"
-                        : "text-xs font-semibold px-2 py-0.5 rounded-full bg-red-500/10 text-red-400 border border-red-500/20 shrink-0 w-14 text-center"
-                    }
-                  >
-                    {m.pct}%
-                  </span>
+            {(() => {
+              const maxValor = Math.max(...fretesAbsorvidos.map((m) => m.valor), 1);
+              return fretesAbsorvidos.map((m) => (
+                <div key={m.mes} className="space-y-1.5">
+                  <div className="flex items-center gap-3 text-sm">
+                    <span className="font-mono text-on-surface-variant w-14 shrink-0">{m.mes}</span>
+                    <span className="text-on-surface-variant shrink-0">
+                      {m.count} {m.count === 1 ? "frete" : "fretes"}
+                    </span>
+                    <span className="font-semibold text-on-surface font-mono flex-1 text-right">
+                      {m.valor > 0 ? formatBRL(m.valor) : "—"}
+                    </span>
+                  </div>
+                  <div className="h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-amber-500/50 rounded-full transition-all"
+                      style={{ width: `${(m.valor / maxValor) * 100}%` }}
+                    />
+                  </div>
                 </div>
-                <div className="h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
-                  <div
-                    className={
-                      m.pct >= 80
-                        ? "h-full bg-emerald-500/50 rounded-full transition-all"
-                        : m.pct >= 50
-                        ? "h-full bg-amber-500/50 rounded-full transition-all"
-                        : "h-full bg-red-500/50 rounded-full transition-all"
-                    }
-                    style={{ width: `${m.pct}%` }}
-                  />
-                </div>
-              </div>
-            ))}
+              ));
+            })()}
           </div>
         </div>
 
